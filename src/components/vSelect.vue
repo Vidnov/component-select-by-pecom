@@ -97,8 +97,8 @@ export default {
       }
     },
     handleOptionSelect(option) {
-      this.$emit('update:model-value', option); // Измените на option, чтобы возвращать весь объект
-      this.searchTerm = option.name; // Или любое другое поле, которое хотите отобразить
+      this.$emit('update:model-value', option);
+      this.searchTerm = option.name;
       this.choiceId = option.id;
       this.show = false;
     },
@@ -106,7 +106,7 @@ export default {
       this.show = true;
       this.filteredOptions = this.options.filter(
         (option) =>
-          option.name.toLowerCase().includes(this.searchTerm.toLowerCase()) // Или другое поле
+          option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
