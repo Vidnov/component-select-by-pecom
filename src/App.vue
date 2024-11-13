@@ -1,10 +1,7 @@
 <template>
   <main>
     <h1>Select with Search</h1>
-    <SelectWithSearch
-        :options="options"
-        v-model="selectedOption"
-    />
+    <SelectWithSearch :options="options" v-model="selectedOption" />
   </main>
 </template>
 
@@ -18,12 +15,12 @@ export default {
   data() {
     return {
       options: [
-        { id: Symbol(1), name: 'Option 1' },
-        { id: Symbol(1), name: 'Option 2' },
-        { id:Symbol(1), name: 'Option 3' },
-        { id: Symbol(1), name: 'Option 4' },
+        { id: 0, name: 'Option 1' },
+        { id: 1, name: 'Option 2' },
+        { id: 2, name: 'Option 3' },
+        { id: 3, name: 'Option 4' },
       ],
-      selectedOption: {id: 1,name: 'Option 1'},
+      selectedOption: { id: 0, name: 'Option 1' },
     };
   },
 };

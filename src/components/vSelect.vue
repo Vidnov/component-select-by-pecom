@@ -1,22 +1,37 @@
 <template>
-  {{showDropdown}}
-  <div id="select-with-search" class="select-with-search" :class="{'focused': showDropdown}">
-    <label for="input_select" class="select-control">
-      <div class="select-control__title">
-        <span class="title">Номер телефона</span>
-      </div>
-      <div class="select-control__input">
-        <input id="input_select" v-model="searchTerm" @input="filterOptions" class="input" type="text">
-      </div>
-        <div @click="handleShowDropdown" class="arrow" :class="{'active': showDropdown }">
-          <vArrow/>
-        </div>
+  <div
+    id="select-with-search"
+    class="select-with-search"
+    :class="{ focused: showDropdown }"
+  >
+    <label for="input_select" class="select-control" >
+      <span class="title">Номер телефона</span>
+      <input
+        id="input_select"
+        v-model="searchTerm"
+        @input="filterOptions"
+        @click.stop="handleShowDropdown"
+        class="input"
+        type="text"
+      />
+      <vArrow
+        class="arrow"
+        :class="{ active: showDropdown }"
+      />
     </label>
     <transition name="dropdown-fade">
       <div class="dropdown" v-show="showDropdown">
         <div class="dropdown-wrapper" v-if="filteredOptions.length">
           <ul class="lists">
-            <li class="list"  v-for="list in filteredOptions" :key="list.id" @click="handleOptionSelect(list)">{{list.name}}</li>
+            <li
+              class="list"
+              :class="{ selected: activeList(list.id) }"
+              v-for="list in filteredOptions"
+              :key="list.id"
+              @click="handleOptionSelect(list)"
+            >
+              {{ list.name }}
+            </li>
           </ul>
         </div>
         <div v-else class="dropdown-wrapper">
@@ -35,58 +50,66 @@ export default {
       required: true,
     },
     modelValue: {
-      type: [String, Object],
-    }
+      type: Object,
+    },
   },
   components: {
-    vArrow
+    vArrow,
   },
   data() {
     return {
       show: false,
       searchTerm: '',
+      choiceId: '',
       filteredOptions: this.options,
     };
   },
   computed: {
-    showDropdown () {
+    showDropdown() {
       return this.show;
-    }
+    },
+    activeList() {
+      return (id) => {
+        return this.choiceId === id;
+      };
+    },
   },
   created() {
     if (this.modelValue) {
-      if(typeof this.modelValue === 'string'){
-        this.searchTerm = this.modelValue;
-      }else {
-        this.searchTerm = this.modelValue.name;
-      }
+      this.choiceId = this.modelValue.id;
+      this.searchTerm = this.modelValue.name;
     }
   },
   mounted() {
-    document.addEventListener('click', this.handleClick)
+    document.addEventListener('click', this.handleClick);
   },
   destroyed() {
-    document.removeEventListener('click', this.handleClick)
+    document.removeEventListener('click', this.handleClick);
   },
   methods: {
-    handleShowDropdown(){
-      this.show = !this.show;
+    handleShowDropdown() {
+      console.log('clicked');
+      setTimeout(()=>{
+        this.show = !this.show;
+      },0)
+
     },
     handleClick(event) {
       const element = document.getElementById('select-with-search');
       if (!element.contains(event.target)) {
         this.show = false;
       }
-},
+    },
     handleOptionSelect(option) {
       this.$emit('update:model-value', option); // Измените на option, чтобы возвращать весь объект
       this.searchTerm = option.name; // Или любое другое поле, которое хотите отобразить
+      this.choiceId = option.id;
       this.show = false;
-      // this.filteredOptions = this.options; // Сброс фильтрации
     },
     filterOptions() {
       this.show = true;
-      this.filteredOptions = this.options.filter(option =>
+      this.filteredOptions = this.options.filter(
+        (option) =>
           option.name.toLowerCase().includes(this.searchTerm.toLowerCase()) // Или другое поле
       );
     },
@@ -101,10 +124,10 @@ export default {
   position: relative;
   font-family: Roboto, sans-serif;
   background: #ffffff;
-  border: 1px solid #E4E6E7;
+  border: 1px solid #e4e6e7;
   border-radius: 3px;
   &:hover {
-    border: 1px solid #848FC9
+    border: 1px solid #848fc9;
   }
   .select-control {
     display: flex;
@@ -112,32 +135,29 @@ export default {
     gap: 4px;
     padding: 9px 16px 4px;
     width: 100%;
-
-    &__title {
-      .title {
-        color: #AAAAAA;
-        font-size: 11px;
-        line-height: 14px;
-        font-weight: 400;
-      }
+    cursor: pointer;
+    .title {
+      color: #aaaaaa;
+      font-size: 11px;
+      line-height: 14px;
+      font-weight: 400;
     }
-    &__input {
-      position: relative;
-      .input {
+
+    .input {
+      border: none;
+      color: #2b2b2b;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 400;
+      width: 100%;
+      padding: 0;
+      &:focus-visible {
         border: none;
-        color: #2b2b2b;
-        font-size: 16px;
-        line-height: 20px;
-        font-weight: 400;
-        width: 100%;
-        &:focus-visible {
-          border: none;
-          outline: none;
-        }
+        outline: none;
       }
     }
     .arrow {
-      transition: all ease-in .3s;
+      transition: all ease-in 0.3s;
       display: flex;
       align-items: center;
       position: absolute;
@@ -155,10 +175,10 @@ export default {
     left: 0;
     right: 0;
     padding: 12px;
-    border: 1px solid #E4E6E7;
+    border: 1px solid #e4e6e7;
     border-radius: 9px;
     background: #ffffff;
-    box-shadow: 0 4px 16px 0 #D1D1D140;
+    box-shadow: 0 4px 16px 0 #d1d1d140;
     .dropdown-wrapper {
       max-height: 260px;
       overflow: scroll;
@@ -179,15 +199,15 @@ export default {
           list-style: none;
           border-radius: 3px;
           &:hover {
-            background: #F7F9FB;
-            color: #48538B;
+            background: #f7f9fb;
+            color: #48538b;
           }
         }
         .selected {
-          background: #48538B;
+          background: #48538b;
           color: #ffffff;
           &:hover {
-            background: #48538B;
+            background: #48538b;
             color: #ffffff;
           }
         }
@@ -195,15 +215,16 @@ export default {
     }
   }
 }
-
 .focused {
-  border: 1px solid #48538B;
+  border: 1px solid #48538b;
+  &:hover {
+    border: 1px solid #48538b;
+  }
 }
 
-///* Переходы для dropdown */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: opacity .2s ease-in;
+  transition: opacity 0.2s ease-in;
 }
 
 .dropdown-fade-enter-from,

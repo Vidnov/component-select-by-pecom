@@ -1,15 +1,25 @@
 <script>
 export default {
-  name: "vArrow"
-}
+  name: 'vArrow',
+};
 </script>
 
 <template>
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 9L12 15L18 9" stroke="#2B2B2B" stroke-width="1.28571" stroke-linecap="round" stroke-linejoin="round"/>
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6 9L12 15L18 9"
+      stroke="#2B2B2B"
+      stroke-width="1.28571"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
   </svg>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
