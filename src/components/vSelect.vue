@@ -88,11 +88,7 @@ export default {
   },
   methods: {
     handleShowDropdown() {
-      console.log('clicked');
-      setTimeout(()=>{
         this.show = !this.show;
-      },0)
-
     },
     handleClick(event) {
       const element = document.getElementById('select-with-search');
