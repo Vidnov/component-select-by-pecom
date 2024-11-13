@@ -35,7 +35,7 @@
           </ul>
         </div>
         <div v-else class="dropdown-wrapper">
-          <span> Нет данных</span>
+          <span>Нет данных</span>
         </div>
       </div>
     </transition>
