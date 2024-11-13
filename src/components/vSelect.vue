@@ -1,13 +1,17 @@
 <template>
-  <div id="select-with-search" class="select-with-search">
-    <div class="select-control" @click="handleShowDropdown">
+  {{showDropdown}}
+  <div id="select-with-search" class="select-with-search" :class="{'focused': showDropdown}">
+    <label for="input_select" class="select-control">
       <div class="select-control__title">
         <span class="title">Номер телефона</span>
       </div>
       <div class="select-control__input">
-        <input v-model="searchTerm" @input="filterOptions"  class="input" type="text">
+        <input id="input_select" v-model="searchTerm" @input="filterOptions" class="input" type="text">
       </div>
-    </div>
+        <div @click="handleShowDropdown" class="arrow" :class="{'active': showDropdown }">
+          <vArrow/>
+        </div>
+    </label>
     <transition name="dropdown-fade">
       <div class="dropdown" v-show="showDropdown">
         <div class="dropdown-wrapper" v-if="filteredOptions.length">
@@ -23,6 +27,7 @@
   </div>
 </template>
 <script>
+import vArrow from './icons/vArrow.vue';
 export default {
   props: {
     options: {
@@ -33,12 +38,20 @@ export default {
       type: [String, Object],
     }
   },
+  components: {
+    vArrow
+  },
   data() {
     return {
-      showDropdown: false,
+      show: false,
       searchTerm: '',
       filteredOptions: this.options,
     };
+  },
+  computed: {
+    showDropdown () {
+      return this.show;
+    }
   },
   created() {
     if (this.modelValue) {
@@ -57,21 +70,22 @@ export default {
   },
   methods: {
     handleShowDropdown(){
-      this.showDropdown = !this.showDropdown;
+      this.show = !this.show;
     },
     handleClick(event) {
       const element = document.getElementById('select-with-search');
       if (!element.contains(event.target)) {
-        this.showDropdown = false;
+        this.show = false;
       }
 },
     handleOptionSelect(option) {
       this.$emit('update:model-value', option); // Измените на option, чтобы возвращать весь объект
       this.searchTerm = option.name; // Или любое другое поле, которое хотите отобразить
-      this.showDropdown = false;
-      this.filteredOptions = this.options; // Сброс фильтрации
+      this.show = false;
+      // this.filteredOptions = this.options; // Сброс фильтрации
     },
     filterOptions() {
+      this.show = true;
       this.filteredOptions = this.options.filter(option =>
           option.name.toLowerCase().includes(this.searchTerm.toLowerCase()) // Или другое поле
       );
@@ -82,18 +96,23 @@ export default {
 
 <style scoped lang="scss">
 .select-with-search {
+  cursor: pointer;
   display: flex;
   position: relative;
   font-family: Roboto, sans-serif;
   background: #ffffff;
   border: 1px solid #E4E6E7;
   border-radius: 3px;
+  &:hover {
+    border: 1px solid #848FC9
+  }
   .select-control {
     display: flex;
     flex-flow: column;
     gap: 4px;
     padding: 9px 16px 4px;
     width: 100%;
+
     &__title {
       .title {
         color: #AAAAAA;
@@ -103,6 +122,7 @@ export default {
       }
     }
     &__input {
+      position: relative;
       .input {
         border: none;
         color: #2b2b2b;
@@ -116,10 +136,22 @@ export default {
         }
       }
     }
+    .arrow {
+      transition: all ease-in .3s;
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%);
+    }
+    .active {
+      transform: rotate(180deg) translateY(50%);
+    }
   }
   .dropdown {
     position: absolute;
-    top: 100%;
+    top: 102%;
     left: 0;
     right: 0;
     padding: 12px;
@@ -164,10 +196,14 @@ export default {
   }
 }
 
+.focused {
+  border: 1px solid #48538B;
+}
+
 ///* Переходы для dropdown */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: opacity .3s ease-in;
+  transition: opacity .2s ease-in;
 }
 
 .dropdown-fade-enter-from,
