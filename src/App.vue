@@ -1,7 +1,7 @@
 <template>
   <main>
     <h1>Select with Search</h1>
-    <SelectWithSearch :options="options" v-model="selectedOption" />
+    <SelectWithSearch :options="options" v-model="selectedOption" error="Обязательное поле"/>
   </main>
 </template>
 

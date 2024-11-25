@@ -2,9 +2,12 @@
   <div
     id="select-with-search"
     class="select-with-search"
-    :class="{ focused: showDropdown }"
+    :class="{
+      focused: showDropdown,
+      error: error,
+    }"
   >
-    <label for="input_select" class="select-control" >
+    <label for="input_select" class="select-control">
       <span class="title">Номер телефона</span>
       <input
         id="input_select"
@@ -14,11 +17,9 @@
         class="input"
         type="text"
       />
-      <vArrow
-        class="arrow"
-        :class="{ active: showDropdown }"
-      />
+      <vArrow class="arrow" :class="{ active: showDropdown }" />
     </label>
+    <span class="error-text">{{ error }}</span>
     <transition name="dropdown-fade">
       <div class="dropdown" v-show="showDropdown">
         <div class="dropdown-wrapper" v-if="filteredOptions.length">
@@ -51,6 +52,10 @@ export default {
     },
     modelValue: {
       type: Object,
+    },
+    error: {
+      type: String,
+      default: null,
     },
   },
   components: {
@@ -88,7 +93,7 @@ export default {
   },
   methods: {
     handleShowDropdown() {
-        this.show = !this.show;
+      this.show = !this.show;
     },
     handleClick(event) {
       const element = document.getElementById('select-with-search');
@@ -104,9 +109,8 @@ export default {
     },
     filterOptions() {
       this.show = true;
-      this.filteredOptions = this.options.filter(
-        (option) =>
-          option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      this.filteredOptions = this.options.filter((option) =>
+        option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
@@ -124,6 +128,15 @@ export default {
   border-radius: 3px;
   &:hover {
     border: 1px solid #848fc9;
+  }
+  .error-text {
+    position: absolute;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: left;
+    color: #ff465c;
+    bottom: -22px;
   }
   .select-control {
     display: flex;
@@ -217,7 +230,12 @@ export default {
     border: 1px solid #48538b;
   }
 }
-
+.error {
+  border: 1px solid #ff465c;
+  &:hover {
+    border: 1px solid #ff465c;
+  }
+}
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
   transition: opacity 0.2s ease-in;
